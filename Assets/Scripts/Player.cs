@@ -1,16 +1,31 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
+    private enum State
+    {
+        Idle,
+        Walking,
+        Running
+    }
+
+    public event EventHandler OnStateChanged;
+
     [SerializeField] private float playerSpeed;
     [SerializeField] private float sprintMultiplier;
+
     private Rigidbody2D rigidBody;
-    private bool isSprinting;
+    private float currentVelocity;
+    private State state;
+    private float moveInputValue;
 
     private void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
+        SetState(State.Idle);
+
     }
 
     private void Start()
@@ -21,22 +36,105 @@ public class Player : MonoBehaviour
 
     private void GameInput_OnSprintPressed(object sender, System.EventArgs e)
     {
-       isSprinting = true;
+        if (IsWalking())
+        {
+            SetState(State.Running);
+
+        }
     }
 
     private void GameInput_OnSprintReleased(object sender, System.EventArgs e)
     {
-        isSprinting = false;
+        if (IsRunning())
+        {
+            SetState(State.Walking);
+        }
+    }
+
+    private void Update()
+    {
+        moveInputValue = GameInput.Instance.GetInputAxis();
+        UpdateState();
     }
 
     private void FixedUpdate()
     {
-        float velocityValue = playerSpeed;
+        UpdateVelocity();
+        rigidBody.linearVelocity = new Vector2(moveInputValue * currentVelocity, rigidBody.linearVelocity.y);
+    }
 
-        if (isSprinting)
+    private void OnDestroy()
+    {
+        if (GameInput.Instance != null)
         {
-            velocityValue *= sprintMultiplier;
+            GameInput.Instance.OnSprintPressed -= GameInput_OnSprintPressed;
+            GameInput.Instance.OnSprintReleased -= GameInput_OnSprintReleased;
         }
-            rigidBody.linearVelocityX = GameInput.Instance.GetInputAxis() * velocityValue;
+    }
+
+    private void UpdateState()
+    {
+        switch (state)
+        {
+            case State.Idle:
+                if (moveInputValue != 0)
+                {
+                    SetState(State.Walking);
+                }
+                break;
+
+            case State.Walking:
+                if (moveInputValue == 0)
+                {
+                    SetState(State.Idle);
+                }
+                break;
+
+            case State.Running:
+                if (moveInputValue == 0)
+                {
+                    SetState(State.Idle);
+                }
+                break;
+        }
+    }
+
+    private void UpdateVelocity()
+    {
+        switch (state)
+        {
+            case State.Idle:
+                currentVelocity = 0;
+                break;
+
+            case State.Walking:
+                currentVelocity = playerSpeed;
+                break;
+
+            case State.Running:
+                currentVelocity = playerSpeed * sprintMultiplier;
+                break;
+        }
+    }
+
+    private void SetState(State state)
+    {
+        this.state = state;
+        OnStateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public bool IsIdle()
+    {
+        return state == State.Idle;
+    }
+
+    public bool IsWalking()
+    {
+        return state == State.Walking;
+    }
+
+    public bool IsRunning()
+    {
+        return state == State.Running;
     }
 }
