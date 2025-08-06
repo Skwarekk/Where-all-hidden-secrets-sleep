@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
+    // Sprint events
     public event EventHandler OnSprintPressed;
     public event EventHandler OnSprintReleased;
+
+    // Crouch events
+    public event EventHandler OnCrouchPressed;
+    public event EventHandler OnCrouchReleased;
 
     public static GameInput Instance { get; private set; }
 
@@ -23,12 +28,18 @@ public class GameInput : MonoBehaviour
 
         playerInputActions.Player.Sprint.started += Sprint_started;
         playerInputActions.Player.Sprint.canceled += Sprint_canceled;
+
+        playerInputActions.Player.Crouch.started += Crouch_started;
+        playerInputActions.Player.Crouch.canceled += Crouch_canceled;
     }
 
     private void OnDestroy()
     {
         playerInputActions.Player.Sprint.started -= Sprint_started;
         playerInputActions.Player.Sprint.canceled -= Sprint_canceled;
+
+        playerInputActions.Player.Crouch.started -= Crouch_started;
+        playerInputActions.Player.Crouch.canceled -= Crouch_canceled;
 
         playerInputActions.Dispose();
     }
@@ -41,6 +52,16 @@ public class GameInput : MonoBehaviour
     private void Sprint_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnSprintReleased?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Crouch_started(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnCrouchPressed?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Crouch_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnCrouchReleased?.Invoke(this, EventArgs.Empty);
     }
 
     public float GetInputAxis()

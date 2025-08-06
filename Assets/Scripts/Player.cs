@@ -8,47 +8,76 @@ public class Player : MonoBehaviour
     {
         Idle,
         Walking,
-        Running
+        Sprinting,
+        Crouching
     }
 
     public event EventHandler OnStateChanged;
 
     [SerializeField] private float playerSpeed;
-    [SerializeField] private float sprintMultiplier;
+    [SerializeField] private float sprintSpeedMultiplier;
+    [SerializeField] private float crouchSpeedMultiplier;
 
     private Rigidbody2D rigidBody;
     private float currentVelocity;
     private State state;
     private float moveInputValue;
 
+    private bool shouldSprint;
+    private bool shouldCrouch;
+
     private void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         SetState(State.Idle);
 
+        shouldSprint = false;
+        shouldCrouch = false;
     }
 
     private void Start()
     {
         GameInput.Instance.OnSprintPressed += GameInput_OnSprintPressed;
         GameInput.Instance.OnSprintReleased += GameInput_OnSprintReleased;
+
+        GameInput.Instance.OnCrouchPressed += GameInput_OnCrouchPressed;
+        GameInput.Instance.OnCrouchReleased += GameInput_OnCrouchReleased;
     }
 
-    private void GameInput_OnSprintPressed(object sender, System.EventArgs e)
+    private void OnDestroy()
     {
-        if (IsWalking())
+        if (GameInput.Instance != null)
         {
-            SetState(State.Running);
+            GameInput.Instance.OnSprintPressed -= GameInput_OnSprintPressed;
+            GameInput.Instance.OnSprintReleased -= GameInput_OnSprintReleased;
 
+            GameInput.Instance.OnCrouchPressed -= GameInput_OnCrouchPressed;
+            GameInput.Instance.OnCrouchReleased -= GameInput_OnCrouchReleased;
         }
     }
 
-    private void GameInput_OnSprintReleased(object sender, System.EventArgs e)
+    // ======= SPRINT EVENTS =======
+
+    private void GameInput_OnSprintPressed(object sender, EventArgs e)
     {
-        if (IsRunning())
-        {
-            SetState(State.Walking);
-        }
+        shouldSprint = true;
+    }
+
+    private void GameInput_OnSprintReleased(object sender, EventArgs e)
+    {
+        shouldSprint = false;
+    }
+
+    // ======= CROUCH EVENTS =======
+
+    private void GameInput_OnCrouchPressed(object sender, EventArgs e)
+    {
+        shouldCrouch = true;
+    }
+
+    private void GameInput_OnCrouchReleased(object sender, EventArgs e)
+    {
+        shouldCrouch = false;
     }
 
     private void Update()
@@ -63,15 +92,6 @@ public class Player : MonoBehaviour
         rigidBody.linearVelocity = new Vector2(moveInputValue * currentVelocity, rigidBody.linearVelocity.y);
     }
 
-    private void OnDestroy()
-    {
-        if (GameInput.Instance != null)
-        {
-            GameInput.Instance.OnSprintPressed -= GameInput_OnSprintPressed;
-            GameInput.Instance.OnSprintReleased -= GameInput_OnSprintReleased;
-        }
-    }
-
     private void UpdateState()
     {
         switch (state)
@@ -81,6 +101,12 @@ public class Player : MonoBehaviour
                 {
                     SetState(State.Walking);
                 }
+
+                if (shouldCrouch)
+                {
+                    SetState(State.Crouching);
+                }
+
                 break;
 
             case State.Walking:
@@ -88,13 +114,33 @@ public class Player : MonoBehaviour
                 {
                     SetState(State.Idle);
                 }
+
+                if (shouldSprint)
+                {
+                    SetState(State.Sprinting);
+                }
+
+                if (shouldCrouch)
+                {
+                    SetState(State.Crouching);
+                }
+
                 break;
 
-            case State.Running:
-                if (moveInputValue == 0)
+            case State.Sprinting:
+                if (!shouldSprint || moveInputValue == 0)
                 {
-                    SetState(State.Idle);
+                    SetState(moveInputValue != 0 ? State.Walking : State.Idle);
                 }
+
+                break;
+
+            case State.Crouching:
+                if (!shouldCrouch)
+                {
+                    SetState(moveInputValue != 0 ? State.Walking : State.Idle);
+                }
+
                 break;
         }
     }
@@ -111,8 +157,12 @@ public class Player : MonoBehaviour
                 currentVelocity = playerSpeed;
                 break;
 
-            case State.Running:
-                currentVelocity = playerSpeed * sprintMultiplier;
+            case State.Sprinting:
+                currentVelocity = playerSpeed * sprintSpeedMultiplier;
+                break;
+
+            case State.Crouching:
+                currentVelocity = playerSpeed * crouchSpeedMultiplier;
                 break;
         }
     }
@@ -133,8 +183,13 @@ public class Player : MonoBehaviour
         return state == State.Walking;
     }
 
-    public bool IsRunning()
+    public bool IsSprinting()
     {
-        return state == State.Running;
+        return state == State.Sprinting;
+    }
+
+    public bool IsCrouching()
+    {
+        return state == State.Crouching;
     }
 }
