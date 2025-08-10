@@ -8,7 +8,8 @@ public class PlayerStateManager : MonoBehaviour
         Idle,
         Walking,
         Sprinting,
-        Crouching
+        CrouchingIdle,
+        CrouchingWalking
     }
 
     public event EventHandler OnStateChanged;
@@ -17,6 +18,8 @@ public class PlayerStateManager : MonoBehaviour
 
     private bool shouldSprint;
     private bool shouldCrouch;
+
+    private float moveInputValue;
 
     private void Awake()
     {
@@ -86,54 +89,34 @@ public class PlayerStateManager : MonoBehaviour
 
     public void UpdateState(float moveInputValue)
     {
-        switch (state)
+        this.moveInputValue = moveInputValue;
+
+        State newState;
+
+        bool isMoving = moveInputValue != 0;
+        bool isSprinting = isMoving && shouldSprint;
+        bool isCrouching = shouldCrouch;
+
+        if (isSprinting && !isCrouching)
         {
-            case State.Idle:
-                if (moveInputValue != 0)
-                {
-                    SetState(State.Walking);
-                }
+            newState = State.Sprinting;
+        }
+        else if (isCrouching)
+        {
+            newState = isMoving ? State.CrouchingWalking : State.CrouchingIdle;
+        }
+        else if (isMoving)
+        {
+            newState = State.Walking;
+        }
+        else
+        {
+            newState = State.Idle;
+        }
 
-                if (shouldCrouch)
-                {
-                    SetState(State.Crouching);
-                }
-
-                break;
-
-            case State.Walking:
-                if (moveInputValue == 0)
-                {
-                    SetState(State.Idle);
-                }
-
-                if (shouldSprint)
-                {
-                    SetState(State.Sprinting);
-                }
-
-                if (shouldCrouch)
-                {
-                    SetState(State.Crouching);
-                }
-
-                break;
-
-            case State.Sprinting:
-                if (!shouldSprint || moveInputValue == 0)
-                {
-                    SetState(moveInputValue != 0 ? State.Walking : State.Idle);
-                }
-
-                break;
-
-            case State.Crouching:
-                if (!shouldCrouch)
-                {
-                    SetState(moveInputValue != 0 ? State.Walking : State.Idle);
-                }
-
-                break;
+        if (state != newState)
+        {
+            SetState(newState);
         }
     }
 
@@ -154,8 +137,32 @@ public class PlayerStateManager : MonoBehaviour
         return state == State.Sprinting;
     }
 
+    public bool IsCrouchingIdle()
+    {
+        return state == State.CrouchingIdle;
+    }
+
+    public bool IsCrouchingWalking()
+    {
+        return state == State.CrouchingWalking;
+    }
+
+    // ======= COMPOSITE STATE CHECKS =======
+
     public bool IsCrouching()
     {
-        return state == State.Crouching;
+        return IsCrouchingIdle() || IsCrouchingWalking();
+    }
+
+    public bool IsMoving()
+    {
+        return IsWalking() || IsSprinting() || IsCrouchingWalking();
+    }
+
+    // ======= GETTERS =======
+
+    public float GetMoveInputValue()
+    {
+        return moveInputValue;
     }
 }

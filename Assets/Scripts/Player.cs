@@ -21,9 +21,17 @@ public class Player : MonoBehaviour
         PlayerStateManager.Instance.OnStateChanged += PlayerStateManager_OnStateChanged;
     }
 
+    private void OnDestroy()
+    {
+        if (PlayerStateManager.Instance != null)
+        {
+            PlayerStateManager.Instance.OnStateChanged -= PlayerStateManager_OnStateChanged;
+        }
+    }
+
     private void PlayerStateManager_OnStateChanged(object sender, System.EventArgs e)
     {
-        if (PlayerStateManager.Instance.IsIdle())
+        if (PlayerStateManager.Instance.IsIdle() || PlayerStateManager.Instance.IsCrouchingIdle())
         {
             currentVelocity = 0;
         }
@@ -35,7 +43,7 @@ public class Player : MonoBehaviour
         {
             currentVelocity = playerSpeed * sprintSpeedMultiplier;
         }
-        else if (PlayerStateManager.Instance.IsCrouching())
+        else if (PlayerStateManager.Instance.IsCrouchingWalking())
         {
             currentVelocity = playerSpeed * crouchSpeedMultiplier;
         }
