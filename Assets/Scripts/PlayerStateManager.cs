@@ -87,7 +87,7 @@ public class PlayerStateManager : MonoBehaviour
         OnStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void UpdateState(float moveInputValue)
+    public void UpdateState(float moveInputValue, bool canStandUp)
     {
         this.moveInputValue = moveInputValue;
 
@@ -96,6 +96,11 @@ public class PlayerStateManager : MonoBehaviour
         bool isMoving = moveInputValue != 0;
         bool isSprinting = isMoving && shouldSprint;
         bool isCrouching = shouldCrouch;
+
+        if (!canStandUp)
+        {
+            isCrouching = true;
+        }
 
         if (isSprinting && !isCrouching)
         {

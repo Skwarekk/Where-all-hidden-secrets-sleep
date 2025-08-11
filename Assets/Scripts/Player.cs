@@ -1,19 +1,31 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
+    [Header("Player Speed Settings")]
     [SerializeField] private float playerSpeed;
     [SerializeField] private float sprintSpeedMultiplier;
     [SerializeField] private float crouchSpeedMultiplier;
 
+    [Header("Player collider settings")]
+    [SerializeField] private Vector2 standColliderSize;
+    [SerializeField] private Vector2 standColliderOffset;
+    [SerializeField] private Vector2 crouchColliderSize;
+    [SerializeField] private Vector2 crouchColliderOffset;
+    [SerializeField] private LayerMask obstacleLayerMask;
+
     private Rigidbody2D rigidBody;
+    private BoxCollider2D boxCollider;
     private float currentVelocity;
     private float moveInputValue;
+    private bool canStandUp;
 
     private void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void Start()
@@ -47,17 +59,48 @@ public class Player : MonoBehaviour
         {
             currentVelocity = playerSpeed * crouchSpeedMultiplier;
         }
+
+        if (PlayerStateManager.Instance.IsCrouching())
+        {
+            boxCollider.size = crouchColliderSize;
+            boxCollider.offset = crouchColliderOffset;
+        }
+        else
+        {
+            boxCollider.size = standColliderSize;
+            boxCollider.offset = standColliderOffset;
+        }
     }
 
     private void Update()
     {
         moveInputValue = GameInput.Instance.GetInputAxis();
 
-        PlayerStateManager.Instance.UpdateState(moveInputValue);
+        PlayerStateManager.Instance.UpdateState(moveInputValue, canStandUp);
+    }
+
+    private bool IsCollidingWithWall()
+    {
+        Vector2 boxCastDirection = new Vector2(moveInputValue, 0f);
+        if (boxCastDirection == Vector2.zero)
+        {
+            return false;
+        }
+
+        float offset = 0.01f;
+        return Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, boxCastDirection, offset, obstacleLayerMask);
     }
 
     private void FixedUpdate()
     {
-        rigidBody.linearVelocity = new Vector2(moveInputValue * currentVelocity, rigidBody.linearVelocity.y);
+        canStandUp = !Physics2D.BoxCast(transform.position, standColliderSize, 0f, Vector2.up, 0.1f, obstacleLayerMask);
+
+        Vector2 targetVelocity = new Vector2(moveInputValue * currentVelocity, rigidBody.linearVelocity.y);
+
+        if (IsCollidingWithWall())
+        {
+            targetVelocity.x = 0;
+        }
+        rigidBody.linearVelocity = targetVelocity;
     }
 }
