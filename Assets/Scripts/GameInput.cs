@@ -11,6 +11,8 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnCrouchPressed;
     public event EventHandler OnCrouchReleased;
 
+    public event EventHandler OnInteractPressed;
+
     public static GameInput Instance { get; private set; }
 
     private PlayerInputActions playerInputActions;
@@ -31,6 +33,8 @@ public class GameInput : MonoBehaviour
 
         playerInputActions.Player.Crouch.started += Crouch_started;
         playerInputActions.Player.Crouch.canceled += Crouch_canceled;
+
+        playerInputActions.Player.Interact.performed += Interact_performed;
     }
 
     private void OnDestroy()
@@ -40,6 +44,8 @@ public class GameInput : MonoBehaviour
 
         playerInputActions.Player.Crouch.started -= Crouch_started;
         playerInputActions.Player.Crouch.canceled -= Crouch_canceled;
+
+        playerInputActions.Player.Interact.performed -= Interact_performed;
 
         playerInputActions.Dispose();
     }
@@ -62,6 +68,11 @@ public class GameInput : MonoBehaviour
     private void Crouch_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnCrouchReleased?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnInteractPressed?.Invoke(this, EventArgs.Empty);
     }
 
     public float GetInputAxis()

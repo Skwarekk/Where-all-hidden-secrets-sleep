@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
@@ -16,11 +16,17 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2 crouchColliderOffset;
     [SerializeField] private LayerMask obstacleLayerMask;
 
+    [Header("Interaction Settings")]
+    [SerializeField] private float interactionRadius;
+
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
     private float currentVelocity;
     private float moveInputValue;
     private bool canStandUp;
+
+    private InteractableObject selectedInteractable;
+    public static event Action<InteractableObject> OnInteractableSelected;
 
     private void Awake()
     {
@@ -31,6 +37,13 @@ public class Player : MonoBehaviour
     private void Start()
     {
         PlayerStateManager.Instance.OnStateChanged += PlayerStateManager_OnStateChanged;
+
+        GameInput.Instance.OnInteractPressed += GameInput_OnInteractPressed;
+    }
+
+    private void GameInput_OnInteractPressed(object sender, EventArgs e)
+    {
+        HandleInteraction();
     }
 
     private void OnDestroy()
@@ -41,7 +54,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void PlayerStateManager_OnStateChanged(object sender, System.EventArgs e)
+    private void PlayerStateManager_OnStateChanged(object sender, EventArgs e)
     {
         if (PlayerStateManager.Instance.IsIdle() || PlayerStateManager.Instance.IsCrouchingIdle())
         {
@@ -77,6 +90,27 @@ public class Player : MonoBehaviour
         moveInputValue = GameInput.Instance.GetInputAxis();
 
         PlayerStateManager.Instance.UpdateState(moveInputValue, canStandUp);
+
+        SetSelectedInteractable();
+    }
+
+    private void SetSelectedInteractable()
+    {
+        InteractableObject newSelectedInteractable = GetClosestInteractable();
+
+        if (newSelectedInteractable != selectedInteractable)
+        {
+            selectedInteractable = newSelectedInteractable;
+            OnInteractableSelected?.Invoke(selectedInteractable);
+        }
+    }
+
+    private void HandleInteraction()
+    {
+        if (selectedInteractable != null)
+        {
+            selectedInteractable.Interact();
+        }
     }
 
     private bool IsCollidingWithWall()
@@ -89,6 +123,31 @@ public class Player : MonoBehaviour
 
         float offset = 0.01f;
         return Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, boxCastDirection, offset, obstacleLayerMask);
+    }
+
+    private InteractableObject GetClosestInteractable()
+    {
+        InteractableObject closestInteractableObject = null;
+        float minDistance = float.MaxValue;
+
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, interactionRadius);
+
+        foreach (Collider2D hitCollider in hitColliders)
+        {
+            InteractableObject interactable = hitCollider.GetComponent<InteractableObject>();
+            if (interactable != null)
+            {
+                float distance = Vector2.Distance(transform.position, interactable.transform.position);
+
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestInteractableObject = interactable;
+                }
+            }
+        }
+
+        return closestInteractableObject;
     }
 
     private void FixedUpdate()
