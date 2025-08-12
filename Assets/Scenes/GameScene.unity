@@ -419,7 +419,7 @@ MonoBehaviour:
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  interactionRadius: 1
+  interactionRadius: 0.5
 --- !u!1 &287015335
 GameObject:
   m_ObjectHideFlags: 0
