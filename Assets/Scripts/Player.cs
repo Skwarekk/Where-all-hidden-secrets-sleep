@@ -52,6 +52,12 @@ public class Player : MonoBehaviour
         {
             PlayerStateManager.Instance.OnStateChanged -= PlayerStateManager_OnStateChanged;
         }
+
+        if (GameInput.Instance != null)
+        {
+            GameInput.Instance.OnInteractPressed -= GameInput_OnInteractPressed;
+
+        }
     }
 
     private void PlayerStateManager_OnStateChanged(object sender, EventArgs e)
