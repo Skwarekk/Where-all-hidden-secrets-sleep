@@ -79,4 +79,14 @@ public class GameInput : MonoBehaviour
     {
         return playerInputActions.Player.Move.ReadValue<float>();
     }
+
+    public void Disable()
+    {
+        playerInputActions.Player.Disable();
+    }
+
+    public void Enable()
+    {
+        playerInputActions.Player.Enable();
+    }
 }
