@@ -8,6 +8,8 @@ public class SelectedInteractableObjectVisual : MonoBehaviour
     private void Start()
     {
         Player.OnInteractableSelected += Player_OnInteractableSelected;
+
+        Hide();
     }
 
     private void OnDestroy()
