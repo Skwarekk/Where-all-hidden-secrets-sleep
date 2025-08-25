@@ -13,16 +13,6 @@ MonoBehaviour:
   m_Name: Note
   m_EditorClassIdentifier: 
   noteTitle: "Tytu\u0142 jaki\u015B fajny"
-  noteContent: 'I can''t....
-
-
-    I''m sorry.....
-
-    I have to leave...
-
-
-    Please....
-
-    Just
-    let me go...'
-  noteImage: {fileID: 0}
+  noteContent: "A whispered terror in Stonehaven's hall...\n\rA darkness born to
+    make souls fall...\nBeyond the walls, the Void takes hold...\nA story of secrets
+    never told..."
