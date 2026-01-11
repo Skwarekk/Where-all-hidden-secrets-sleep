@@ -1,9 +1,11 @@
 using UnityEngine;
 
-public class SelectedInteractableObjectVisual : MonoBehaviour
+public class selectedInteractableObjectVisual : MonoBehaviour
 {
     [SerializeField] private InteractableObject interactableObject;
-    [SerializeField] private GameObject visualGameObject;
+    [SerializeField] private GameObject iconImage;
+
+    private bool isShown = false;
 
     private void Start()
     {
@@ -25,17 +27,22 @@ public class SelectedInteractableObjectVisual : MonoBehaviour
         }
         else
         {
-            Hide();
+            if (isShown)
+            {
+                Hide();
+            }
         }
     }
 
     private void Show()
     {
-        visualGameObject.SetActive(true);
+        iconImage.SetActive(true);
+        isShown = true;
     }
 
     private void Hide()
     {
-        visualGameObject.SetActive(false);
+        iconImage.SetActive(false);
+        isShown = false;
     }
 }

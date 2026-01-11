@@ -12,7 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef5ee865ea81d6409c74a25d579c842, type: 3}
   m_Name: Note
   m_EditorClassIdentifier: 
-  noteTitle: "Tytu\u0142 jaki\u015B fajny"
+  noteTitle: Rhyme 1
+  withDate: 1
+  noteDate:
+    day: 24
+    month: 12
+    year: 2008
   noteContent: "A whispered terror in Stonehaven's hall...\n\rA darkness born to
     make souls fall...\nBeyond the walls, the Void takes hold...\nA story of secrets
     never told..."
+  isDrawing: 0
+  drawing: {fileID: 7839935174267805405, guid: dd5c92b93a601d54e9510e05b4d16e2c, type: 3}

@@ -12,7 +12,11 @@ public class Note : InteractableObject
         }
 
         NotesManager.Instance.ShowNote(noteSO);
-        DestroySelf();
+
+        if (noteSO.disapearAfterReading)
+        {
+            DestroySelf();
+        }
     }
 
     private void DestroySelf()

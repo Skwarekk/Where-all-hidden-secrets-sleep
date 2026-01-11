@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: f5998623eae34f64981c62c9254ba342
+guid: af10268b3383be642aa6cacecf116479
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2798290011037525337
-    second: Candle_0
+      213: 4093480436322176185
+    second: Shadow_0
+  - first:
+      213: -6472874401326232
+    second: Shadow_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +116,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Candle_0
+      name: Shadow_0
       rect:
         serializedVersion: 2
-        x: 25
-        y: 15
-        width: 14
-        height: 34
+        x: 0
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9556a6660f585d620800000000000000
-      internalID: 2798290011037525337
+      spriteID: 9bc8ef5c4c6fec830800000000000000
+      internalID: 4093480436322176185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86b12ac74f009eff0800000000000000
+      internalID: -6472874401326232
       vertices: []
       indices: 
       edges: []
@@ -138,7 +163,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 8ca78c486204b884dbcb1146601b6e61
     internalID: 0
     vertices: []
     indices: 
@@ -146,9 +171,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Candle_0: 2798290011037525337
+      Shadow_0: 4093480436322176185
+      Shadow_1: -6472874401326232
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
