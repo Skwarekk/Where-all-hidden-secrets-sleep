@@ -53,7 +53,7 @@ public class NotesUI : MonoBehaviour
         }
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (NotesManager.Instance != null)
         {

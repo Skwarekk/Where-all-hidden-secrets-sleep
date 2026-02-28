@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5478648875318845379, guid: 4589af99f5f7a004ebeb24416101cd6f, type: 3}
       propertyPath: m_SortingOrder
-      value: -1
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5533457140693257332, guid: 4589af99f5f7a004ebeb24416101cd6f, type: 3}
       propertyPath: interactableObject

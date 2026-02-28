@@ -337,9 +337,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c260d260773588449f2f8effc9074d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 0.75
+  playerSpeed: 1
   sprintSpeedMultiplier: 2
-  crouchSpeedMultiplier: 0.5
+  crouchSpeedMultiplier: 0.75
   standColliderSize: {x: 0.22, y: 0.7}
   standColliderOffset: {x: 0, y: -0.13}
   crouchColliderSize: {x: 0.22, y: 0.42}

@@ -141,7 +141,7 @@ public class Player : MonoBehaviour
         foreach (Collider2D hitCollider in hitColliders)
         {
             InteractableObject interactable = hitCollider.GetComponent<InteractableObject>();
-            if (interactable != null)
+            if (interactable != null && !interactable.Disabled())
             {
                 float distance = Vector2.Distance(transform.position, interactable.transform.position);
 
