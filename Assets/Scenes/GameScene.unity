@@ -1599,6 +1599,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1187948632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &345948014 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2040151362026894856, guid: 7e3cbbc5cc49c6d46a80d68098216cee, type: 3}
+  m_PrefabInstance: {fileID: 1514095415}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &368648272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3785,6 +3790,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 61862392}
+  - {fileID: 345948014}
   m_Father: {fileID: 192026702}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1187948631
@@ -5067,7 +5073,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1149188165}
     m_Modifications:
     - target: {fileID: 397136375184074803, guid: 7e3cbbc5cc49c6d46a80d68098216cee, type: 3}
       propertyPath: m_Name
@@ -5099,15 +5105,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2040151362026894856, guid: 7e3cbbc5cc49c6d46a80d68098216cee, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2040151362026894856, guid: 7e3cbbc5cc49c6d46a80d68098216cee, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2040151362026894856, guid: 7e3cbbc5cc49c6d46a80d68098216cee, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2040151362026894856, guid: 7e3cbbc5cc49c6d46a80d68098216cee, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5668,11 +5674,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18001f362738652498302c3c75cf6efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outAnimationDuration: 0.2
   closeButton: {fileID: 1595285813}
   noteContent: {fileID: 139255221}
   noteDate: {fileID: 1851815406}
   noteDrawing: {fileID: 944282999}
-  outAnimationDuration: 0.5
 --- !u!95 &1762248299
 Animator:
   serializedVersion: 7
@@ -5904,9 +5910,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88f409d9b64fcfc4e954044fcdaa8767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PinpadUI
+  outAnimationDuration: 0.2
   closeButton: {fileID: 259064098}
   pinDisplayText: {fileID: 1775789752}
-  outAnimationDuration: 0.5
 --- !u!4 &1797317498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2040151362026894856, guid: 063d124a0530ccf468b04b47317cd63e, type: 3}
@@ -6988,4 +6994,3 @@ SceneRoots:
   - {fileID: 1197793377}
   - {fileID: 817541936}
   - {fileID: 2117751224}
-  - {fileID: 1514095415}

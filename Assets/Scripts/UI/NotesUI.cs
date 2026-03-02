@@ -2,31 +2,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NotesUI : MonoBehaviour
+public class NotesUI : OpenableUI
 {
-    private const string IN = "In";
-    private const string OUT = "Out";
-
-    [Header("References")]
-    [Space(10)]
     [SerializeField] private Button closeButton;
     [SerializeField] private TextMeshProUGUI noteContent;
     [SerializeField] private TextMeshProUGUI noteDate;
     [SerializeField] private Image noteDrawing;
 
-    [Space(20)]
-    [Header("Animation settings")]
-    [Space(10)]
-    [SerializeField] private float outAnimationDuration = 0.5f;
-
-    private Animator animator;
-
-    private float outAnimatintimer = 0;
-    private bool isPlayingOutAnimation = false;
-
-    private void Start()
+    protected override void Start()
     {
-        animator = GetComponent<Animator>();
+        base.Start();
 
         NotesManager.Instance.OnNoteOpened += NotesManager_OnNoteOpened;
         NotesManager.Instance.OnNoteClosed += NotesManager_OnNoteClosed;
@@ -35,22 +20,6 @@ public class NotesUI : MonoBehaviour
         {
             NotesManager.Instance.HideNote();
         });
-
-        gameObject.SetActive(false);
-    }
-
-    private void Update()
-    {
-        if (isPlayingOutAnimation)
-        {
-            outAnimatintimer += Time.deltaTime;
-            if (outAnimatintimer >= outAnimationDuration)
-            {
-                gameObject.SetActive(false);
-                isPlayingOutAnimation = false;
-                outAnimatintimer = 0;
-            }
-        }
     }
 
     private void OnDestroy()
@@ -82,17 +51,5 @@ public class NotesUI : MonoBehaviour
     private void NotesManager_OnNoteClosed(object sender, System.EventArgs e)
     {
         Hide();
-    }
-
-    private void Show()
-    {
-        gameObject.SetActive(true);
-        animator.SetTrigger(IN);
-    }
-
-    private void Hide()
-    {
-        animator.SetTrigger(OUT);
-        isPlayingOutAnimation = true;
     }
 }
